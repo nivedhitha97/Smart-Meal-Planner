@@ -1,6 +1,6 @@
 //
 //  JSONLoader.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

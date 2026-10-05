@@ -1,6 +1,6 @@
 //
 //  SupermarketOffer.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

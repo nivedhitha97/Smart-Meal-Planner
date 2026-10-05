@@ -1,6 +1,6 @@
 //
 //  MealPlanner.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

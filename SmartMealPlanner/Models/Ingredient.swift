@@ -1,6 +1,6 @@
 //
 //  Ingredient.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 //  Created by Nivedhitha on 29/12/2025.
 //

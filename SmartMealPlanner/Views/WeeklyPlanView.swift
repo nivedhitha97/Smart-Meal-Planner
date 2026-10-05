@@ -1,6 +1,6 @@
 //
 //  WeeklyPlanView.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import SwiftUI

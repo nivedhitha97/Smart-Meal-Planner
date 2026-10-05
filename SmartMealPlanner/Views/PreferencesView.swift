@@ -1,6 +1,6 @@
 //
 //  PreferencesView.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import SwiftUI
