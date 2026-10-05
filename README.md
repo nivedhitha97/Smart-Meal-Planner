@@ -1,4 +1,4 @@
-# Smart Meal Planner – iOS (SwiftUI)
+# SmartMealPlanner – iOS (SwiftUI)
 
 ## Project Overview
 
