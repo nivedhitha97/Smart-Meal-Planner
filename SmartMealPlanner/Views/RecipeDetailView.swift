@@ -1,6 +1,6 @@
 //
 //  RecipeDetailView.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import SwiftUI

@@ -1,6 +1,6 @@
 //
 //  Recipe.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

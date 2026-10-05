@@ -1,6 +1,6 @@
 //
-//  SmartGroceryAppApp.swift
-//  SmartGroceryApp
+//  SmartMealPlannerApp.swift
+//  SmartMealPlanner
 //
 //  Created by Nivedhitha on 29/12/2025.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct SmartGroceryAppApp: App {
+struct SmartMealPlannerApp: App {
 
     @StateObject private var planning = PlanningViewModel(ai: LocalHeuristicAIPlanner())
 

@@ -1,6 +1,6 @@
 //
 //  PlanningViewModel.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Combine

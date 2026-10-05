@@ -1,6 +1,6 @@
 //
 //  AISuggestedWeekPlan.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

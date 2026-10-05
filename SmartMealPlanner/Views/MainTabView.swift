@@ -1,6 +1,6 @@
 //
 //  MainTabView.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import SwiftUI

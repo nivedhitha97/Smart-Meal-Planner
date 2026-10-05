@@ -1,6 +1,6 @@
 //
 //  DailyMealLog.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

@@ -1,6 +1,6 @@
 //
 //  UserPreferences.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

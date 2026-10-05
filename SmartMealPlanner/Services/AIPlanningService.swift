@@ -1,6 +1,6 @@
 //
 //  AIPlanningService.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 
 import Foundation

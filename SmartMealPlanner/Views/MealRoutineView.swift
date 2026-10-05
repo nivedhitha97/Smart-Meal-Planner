@@ -1,6 +1,6 @@
 //
 //  MealRoutineView.swift
-//  SmartGroceryApp
+//  SmartMealPlanner
 //
 //  Created by Nivedhitha on 30/12/2025.
 //
