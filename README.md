@@ -8,6 +8,25 @@ The app addresses a practical challenge faced by users—planning meals and groc
 
 ---
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/01-launch.png" width="220" alt="Launch screen"/><br/><b>Launch screen</b></td>
+    <td align="center"><img src="docs/screenshots/02-weekly-plan.png" width="220" alt="Weekly plan with budget card and planner notes"/><br/><b>Weekly plan</b><br/><sub>Budget tracking &amp; planner notes</sub></td>
+    <td align="center"><img src="docs/screenshots/03-meals.png" width="220" alt="Day picker with meals and weekly nutrition"/><br/><b>Daily meals</b><br/><sub>Day picker &amp; weekly nutrition</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/04-recipe.png" width="220" alt="Recipe detail with photo, video and cookbook links"/><br/><b>Recipe detail</b><br/><sub>Photo, video &amp; cookbook links</sub></td>
+    <td align="center"><img src="docs/screenshots/05-offers.png" width="220" alt="Regional supermarket offers"/><br/><b>Regional offers</b><br/><sub>Filter deals by category</sub></td>
+    <td align="center"><img src="docs/screenshots/06-preferences.png" width="220" alt="Diet, breakfast and cuisine preferences"/><br/><b>Preferences</b><br/><sub>Diet, breakfast &amp; cuisines</sub></td>
+  </tr>
+</table>
+
+UI designed in Figma: [Smart Meal Planner – UI Revamp](https://www.figma.com/design/mCMW5PlNeirvCva8Ns9EAs)
+
+---
+
 ## Key Features
 
 ### User Preferences Management
