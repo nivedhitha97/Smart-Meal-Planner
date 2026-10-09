@@ -11,11 +11,23 @@ import SwiftUI
 struct SmartMealPlannerApp: App {
 
     @StateObject private var planning = PlanningViewModel(ai: LocalHeuristicAIPlanner())
+    @State private var showSplash = true
 
     var body: some Scene {
         WindowGroup {
-            MainTabView()
-                .environmentObject(planning)
+            ZStack {
+                MainTabView()
+                    .environmentObject(planning)
+                if showSplash {
+                    SplashView()
+                        .transition(.opacity)
+                        .zIndex(1)
+                }
+            }
+            .task {
+                try? await Task.sleep(for: .seconds(1.4))
+                withAnimation(.easeOut(duration: 0.35)) { showSplash = false }
+            }
         }
     }
 }
