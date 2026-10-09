@@ -13,6 +13,10 @@ struct PreferencesView: View {
     @State private var allergies = ""
     @State private var weeklyBudget: Double = 50
     @State private var shoppingRegion = ""
+    @State private var postcode = ""
+    @State private var location: PostcodeLocation?
+    @State private var isLookingUpPostcode = false
+    @State private var postcodeError: String?
     @State private var breakfastRecipePreference: BreakfastRecipePreference = .includeRecipes
     @State private var routineSummary: String?
     @State private var didSave = false
@@ -39,6 +43,7 @@ struct PreferencesView: View {
                             .contentTransition(.symbolEffect(.replace))
                     }
                     .buttonStyle(.primary)
+                    .disabled(isLookingUpPostcode || postcodeError != nil)
                     .sensoryFeedback(.success, trigger: didSave) { _, new in new }
                     .padding(.top, 4)
                 }
@@ -170,10 +175,57 @@ struct PreferencesView: View {
                 .foregroundStyle(Color.textTertiary)
             }
 
-            InputField(icon: "mappin.and.ellipse", placeholder: "Shopping region (e.g. NL-North, Amsterdam)", text: $shoppingRegion)
-                .textInputAutocapitalization(.never)
+            VStack(alignment: .leading, spacing: 10) {
+                InputField(icon: "mappin.and.ellipse", placeholder: "Postcode (e.g. 1012 AB)", text: $postcode)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                    .textContentType(.postalCode)
+                locationStatus
+                    .animation(.snappy(duration: 0.2), value: location)
+            }
+            .task(id: postcode) { await resolvePostcode() }
         }
         .card()
+    }
+
+    @ViewBuilder
+    private var locationStatus: some View {
+        if isLookingUpPostcode {
+            HStack(spacing: 8) {
+                ProgressView()
+                    .controlSize(.small)
+                Text("Finding your area…")
+            }
+            .font(.footnote)
+            .foregroundStyle(Color.textSecondary)
+        } else if let postcodeError {
+            Label(postcodeError, systemImage: "exclamationmark.circle.fill")
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(Color.accentCoral)
+        } else if let location {
+            HStack(spacing: 10) {
+                IconCircle(systemName: "mappin", tint: .brandPrimary, background: .brandPrimarySoft, size: 28)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(location.city ?? "Postcode \(location.postcode)")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.textPrimary)
+                    Text("\(location.postcode) · Offers matched for this area")
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary)
+                }
+                Spacer(minLength: 8)
+                Badge(text: location.regionId, foreground: .brandPrimaryDeep, background: .brandPrimarySoft)
+            }
+            .accessibilityElement(children: .combine)
+        } else if !shoppingRegion.isEmpty {
+            Text("Current region: \(shoppingRegion). Add your postcode to update it.")
+                .font(.footnote)
+                .foregroundStyle(Color.textSecondary)
+        } else {
+            Text("We use your postcode to find supermarket offers near you.")
+                .font(.footnote)
+                .foregroundStyle(Color.textTertiary)
+        }
     }
 
     private var routineLink: some View {
@@ -210,7 +262,8 @@ struct PreferencesView: View {
             dislikes: splitList(dislikes),
             allergies: splitList(allergies),
             budgetWeekly: weeklyBudget,
-            shoppingRegion: shoppingRegion.trimmingCharacters(in: .whitespacesAndNewlines),
+            shoppingRegion: location?.shoppingRegion ?? (postcode.isEmpty ? shoppingRegion : ""),
+            postcode: location?.postcode ?? "",
             breakfastRecipePreference: breakfastRecipePreference
         )
         if let encoded = try? JSONEncoder().encode(preferences) {
@@ -230,8 +283,44 @@ struct PreferencesView: View {
         dislikes = saved.dislikes.joined(separator: ", ")
         allergies = saved.allergies.joined(separator: ", ")
         weeklyBudget = saved.budgetWeekly
-        shoppingRegion = saved.shoppingRegion
+        // With a postcode the region is re-derived from it; the raw text is only kept for
+        // preferences saved before postcode lookup existed.
+        shoppingRegion = saved.postcode.isEmpty ? saved.shoppingRegion : ""
+        postcode = saved.postcode
         breakfastRecipePreference = saved.breakfastRecipePreference
+    }
+
+    /// Resolves the typed postcode after a short pause. Runs whenever `postcode` changes; a newer
+    /// keystroke cancels the previous lookup.
+    private func resolvePostcode() async {
+        isLookingUpPostcode = false
+        let trimmed = postcode.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else {
+            location = nil
+            postcodeError = nil
+            return
+        }
+        guard PostcodeLocationService.normalize(trimmed) != nil else {
+            location = nil
+            // Only complain once a full-length postcode has been typed.
+            let typed = trimmed.filter { !$0.isWhitespace }.count
+            postcodeError = typed >= 6 ? PostcodeLookupError.invalidFormat.errorDescription : nil
+            return
+        }
+        if location?.postcode == PostcodeLocationService.normalize(trimmed) { return }
+
+        postcodeError = nil
+        isLookingUpPostcode = true
+        try? await Task.sleep(for: .milliseconds(400))
+        guard !Task.isCancelled else { return }
+        do {
+            let resolved = try await PostcodeLocationService.resolve(trimmed)
+            guard !Task.isCancelled else { return }
+            location = resolved
+        } catch {
+            postcodeError = error.localizedDescription
+        }
+        isLookingUpPostcode = false
     }
 
     private func loadRoutineSummary() {
