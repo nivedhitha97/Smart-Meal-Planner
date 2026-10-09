@@ -30,8 +30,11 @@ struct UserPreferences: Codable, Equatable {
     var dislikes: [String]
     var allergies: [String]
     var budgetWeekly: Double
-    /// Area or city used to match regional supermarket offers (e.g. "Amsterdam", "NL-North").
+    /// Area or city used to match regional supermarket offers (e.g. "Amsterdam, NL-North").
+    /// Derived from `postcode` when one is set.
     var shoppingRegion: String
+    /// Dutch postcode the shopping region is looked up from, e.g. "1012 AB". Empty if not set.
+    var postcode: String
     /// When `granolaMuesliOnly`, the planner never assigns a catalog recipe to breakfast.
     var breakfastRecipePreference: BreakfastRecipePreference
 
@@ -42,6 +45,7 @@ struct UserPreferences: Codable, Equatable {
         allergies: [String],
         budgetWeekly: Double,
         shoppingRegion: String = "",
+        postcode: String = "",
         breakfastRecipePreference: BreakfastRecipePreference = .includeRecipes
     ) {
         self.dietType = dietType
@@ -50,11 +54,12 @@ struct UserPreferences: Codable, Equatable {
         self.allergies = allergies
         self.budgetWeekly = budgetWeekly
         self.shoppingRegion = shoppingRegion
+        self.postcode = postcode
         self.breakfastRecipePreference = breakfastRecipePreference
     }
 
     enum CodingKeys: String, CodingKey {
-        case dietType, cuisines, dislikes, allergies, budgetWeekly, shoppingRegion, breakfastRecipePreference
+        case dietType, cuisines, dislikes, allergies, budgetWeekly, shoppingRegion, postcode, breakfastRecipePreference
     }
 
     init(from decoder: Decoder) throws {
@@ -65,6 +70,7 @@ struct UserPreferences: Codable, Equatable {
         allergies = try c.decodeIfPresent([String].self, forKey: .allergies) ?? []
         budgetWeekly = try c.decode(Double.self, forKey: .budgetWeekly)
         shoppingRegion = try c.decodeIfPresent(String.self, forKey: .shoppingRegion) ?? ""
+        postcode = try c.decodeIfPresent(String.self, forKey: .postcode) ?? ""
         breakfastRecipePreference = try c.decodeIfPresent(BreakfastRecipePreference.self, forKey: .breakfastRecipePreference)
             ?? .includeRecipes
     }
@@ -77,6 +83,7 @@ struct UserPreferences: Codable, Equatable {
         try c.encode(allergies, forKey: .allergies)
         try c.encode(budgetWeekly, forKey: .budgetWeekly)
         try c.encode(shoppingRegion, forKey: .shoppingRegion)
+        try c.encode(postcode, forKey: .postcode)
         try c.encode(breakfastRecipePreference, forKey: .breakfastRecipePreference)
     }
 
